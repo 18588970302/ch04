@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.order.OrderMapper">
+    <insert id="add" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        insert into easybuy_order(userId,loginName,userAddress,createTime,cost,serialNumber)
+        values(#{userId},#{loginName},#{userAddress},#{createTime},#{cost},#{serialNumber})
+    </insert>
+    <select id="getOrderList" resultMap="orderList">
+        select O.*,D.id AS d_id,D.orderId,D.productId,P.name AS productName,P.fileName,D.quantity,D.cost AS d_cost
+        from easybuy_order O
+        inner join easybuy_order_detail D on O.id = D.orderId
+        inner join easybuy_product P on P.id = D.productId
+        <where>
+            <if test="userId != null">
+                and O.userId = #{userId}
+            </if>
+        </where>
+        order by O.createTime DESC limit #{currentPageNo},#{pageSize}
+    </select>
+    <resultMap id="orderList" type="Order">
+        <id property="id" column="id"></id>
+        <result property="userId" column="userId"></result>
+        <result property="loginName" column="loginName"></result>
+        <result property="userAddress" column="userAddress"></result>
+        <result property="cost" column="cost"></result>
+        <result property="serialNumber" column="serialNumber"></result>
+        <collection property="orderDetailList" ofType="OrderDetail" resultMap="orderDetailList"/>
+    </resultMap>
+    <resultMap id="orderDetailList" type="OrderDetail">
+        <id property="id" column="d_id"/>
+        <result property="orderId" column="orderId"></result>
+        <result property="quantity" column="quantity"></result>
+        <result property="productId" column="productId"></result>
+        <result property="cost" column="d_cost"></result>
+        <association property="product" javaType="Product" resultMap="productResult"/>
+    </resultMap>
+    <resultMap id="productResult" type="Product">
+        <id property="id" column="productId"/>
+        <result property="name" column="productName"/>
+        <result property="fileName" column="fileName"/>
+    </resultMap>
+    <select id="count" resultType="Integer" parameterType="Integer">
+        select count(1) from easybuy_order
+        <where>
+            <if test="userId != null">
+                userId = #{userId}
+            </if>
+        </where>
+    </select>
+</mapper>

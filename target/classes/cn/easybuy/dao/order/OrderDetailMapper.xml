@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.easybuy.dao.order.OrderDetailMapper">
+    <insert id="add" parameterType="OrderDetail">
+        insert into easybuy_order_detail(orderId,productId,quantity,cost)
+        values(#{orderId},#{productId},#{quantity},#{cost})
+    </insert>
+    <select id="getOrderDetailList" resultMap="orderDetailList" parameterType="Integer">
+        select D.id,D.orderId,D.productId,P.name AS productName,P.fileName,D.quantity,D.cost from easybuy_order_detail D
+        inner join easybuy_product P on P.id = D.productId
+        <where>
+            <if test="orderId != null">
+                and D.orderId = #{orderId}
+            </if>
+        </where>
+    </select>
+    <resultMap id="orderDetailList" type="OrderDetail">
+        <id property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="quantity" column="quantity"/>
+        <result property="cost" column="cost"/>
+        <association property="product" javaType="Product" resultMap="productResult"/>
+    </resultMap>
+    <resultMap id="productResult" type="Product">
+        <id property="id" column="productId"/>
+        <result property="name" column="productName"/>
+        <result property="fileName" column="fileName"/>
+    </resultMap>
+</mapper>

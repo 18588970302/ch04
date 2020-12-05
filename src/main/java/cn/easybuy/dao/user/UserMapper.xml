@@ -19,7 +19,7 @@
         </where>
     </select>
     <select id="count" resultType="Integer">
-        SELECT count(1) FROM easybuy_user
+        SELECT count(*) FROM easybuy_user
     </select>
     <update id="update" parameterType="User">
         update easybuy_user

@@ -27,4 +27,6 @@ public interface UserDao extends IBaseDao {
 	public Integer count() throws Exception;
 	
 	public User getUser(Integer id,String loginName) throws Exception;
+
+	public User getUsers(Integer id, String loginName);
 }

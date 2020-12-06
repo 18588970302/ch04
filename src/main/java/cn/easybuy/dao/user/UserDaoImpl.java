@@ -170,4 +170,26 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 		return user;
 	}
 
+	@Override
+	public User getUsers(Integer id, String loginName) {
+    	User user = new User();
+    	user.setId(10);
+    	user.setSex(1);
+    	user.setLoginName("liming");
+    	user.setPassword("123456");
+    	user.setType(2);
+    	user.setMobile("18588970302");
+    	user.setEmail("2649291993@qq.com");
+    	try {
+    		while(id == null){
+    			continue;
+			}
+		}catch(Exception e){
+    		e.printStackTrace();
+		}finally{
+			System.out.println("null");
+		}
+		return user;
+	}
+
 }
